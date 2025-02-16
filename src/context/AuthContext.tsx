@@ -34,10 +34,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
-    // Read token from cookies
     const token = getCookie("token");
-    if (token) {
-      setUser({ token });
+    const email = getCookie("email");
+    if (token && email) {
+      setUser({ token, email });
     }
   }, []);
 
@@ -56,7 +56,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!token) {
           return { success: false, message: "Authentication token missing" };
         }
-        // Set cookie with token
         setCookie("token", token, 1); // Expires in 1 day
         setCookie("email", email, 1); // Expires in 1 day
         setUser({ token, email });
@@ -84,7 +83,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         if (!token) {
           return { success: false, message: "Authentication token missing" };
         }
-        // Set cookie with token
         setCookie("token", token, 1); // Expires in 1 day
         setCookie("email", email, 1); // Expires in 1 day
         setUser({ token, email });
@@ -102,8 +100,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       method: "DELETE",
       headers: { Authorization: `Bearer ${user?.token}` },
     });
-    // Remove cookie
     deleteCookie("token");
+    deleteCookie("email");
     setUser(null);
     router.push("/login");
   };

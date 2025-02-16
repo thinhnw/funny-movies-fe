@@ -58,6 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         // Set cookie with token
         setCookie("token", token, 1); // Expires in 1 day
+        setCookie("email", email, 1); // Expires in 1 day
         setUser({ token, email });
         return { success: true };
       }
@@ -85,6 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         // Set cookie with token
         setCookie("token", token, 1); // Expires in 1 day
+        setCookie("email", email, 1); // Expires in 1 day
         setUser({ token, email });
         return { success: true };
       }

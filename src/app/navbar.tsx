@@ -14,7 +14,13 @@ export default function Navbar() {
 
         {user ? (
           <div className="flex items-center space-x-4">
-            <p>{user.email}</p>
+            <p className="text-gray-300">{user.email}</p>
+            <Link
+              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              href="/share"
+            >
+              Share a movie
+            </Link>
             <button
               onClick={logout}
               className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"

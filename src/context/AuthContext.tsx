@@ -11,6 +11,7 @@ import { getCookie, setCookie, deleteCookie } from "@/utils/cookies";
 
 interface User {
   token: string;
+  email: string;
 }
 
 interface AuthContextValue {
@@ -57,7 +58,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         // Set cookie with token
         setCookie("token", token, 1); // Expires in 1 day
-        setUser({ token });
+        setUser({ token, email });
         return { success: true };
       }
       return { success: false, message: "Signup failed" };
@@ -84,7 +85,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
         // Set cookie with token
         setCookie("token", token, 1); // Expires in 1 day
-        setUser({ token });
+        setUser({ token, email });
         return { success: true };
       }
       return { success: false, message: "Login failed" };

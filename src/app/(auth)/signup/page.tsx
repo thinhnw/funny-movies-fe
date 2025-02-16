@@ -16,7 +16,7 @@ export default function Signup() {
     setError("");
     const result = await signup(email, password);
     if (result.success) {
-      router.push("/dashboard");
+      router.push("/");
     } else {
       setError(result.message || "Signup failed");
     }

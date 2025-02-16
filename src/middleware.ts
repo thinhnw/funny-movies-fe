@@ -7,16 +7,16 @@ export async function middleware(request: NextRequest) {
   const token = cookieStore.get('token');
   const { pathname } = request.nextUrl;
 
-  const protectedRoutes = ['/dashboard'];
-  const publicRoutes = ['/login', '/signup'];
+  // const protectedRoutes = [ '/newsfeed' ];
+  const publicRoutes = ['/login', '/signup', '/newsfeed'];
 
   if (token && publicRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
+    return NextResponse.redirect(new URL('/newsfeed', request.url));
   }
 
-  if (!token && protectedRoutes.includes(pathname)) {
-    return NextResponse.redirect(new URL('/login', request.url));
-  }
+  // if (!token && protectedRoutes.includes(pathname)) {
+  //   return NextResponse.redirect(new URL('/login', request.url));
+  // }
 
   return NextResponse.next();
 }

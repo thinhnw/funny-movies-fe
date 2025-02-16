@@ -6,7 +6,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/",
-        destination: "/dashboard",
+        destination: "/newsfeed",
         permanent: true, // Use `true` for a 301 redirect, `false` for a 302
       },
     ];

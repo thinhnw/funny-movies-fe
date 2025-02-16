@@ -7,7 +7,7 @@ export async function middleware(request: NextRequest) {
   const token = cookieStore.get('token');
   const { pathname } = request.nextUrl;
 
-  const protectedRoutes = [ '/newsfeed' ];
+  const protectedRoutes = [ '/share' ];
   const publicRoutes = ['/login', '/signup'];
 
   if (token && publicRoutes.includes(pathname)) {

@@ -1,6 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import cable from "@/utils/cable";
+import { toast } from "react-toastify";
+import { getCookie, setCookie, deleteCookie } from "@/utils/cookies";
 
 type Video = {
   id: number;
@@ -12,18 +15,55 @@ type Video = {
   };
 };
 
+const ITEMS_PER_PAGE = 5;
+
 export default function Newsfeed() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+
+  useEffect(() => {
+    const subscription = cable.subscriptions.create(
+      {
+        channel: "NotificationChannel",
+        token: getCookie("token"),
+      },
+      {
+        received: (video: Video) => {
+          toast(
+            <div>
+              <h5 className="font-semibold text-lg mb-2 text-gray-800">
+                New Video Shared!
+              </h5>
+              <p className="text-sm font-medium text-gray-600">
+                Video: <span className="font-bold">{video.title}</span>
+              </p>
+              <p className="text-sm text-gray-500">
+                Shared by: <span className="italic">{video.user.email}</span>
+              </p>
+            </div>
+          );
+        },
+      }
+    );
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  });
 
   useEffect(() => {
     const fetchVideos = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/videos`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/videos?page=${page}&limit=${ITEMS_PER_PAGE}`
+        );
         if (!response.ok) throw new Error("Failed to fetch videos");
         const data = await response.json();
         setVideos(data.videos);
+        setTotalPages(Math.ceil(data.total_videos / ITEMS_PER_PAGE));
       } catch (error) {
         console.error("Error fetching videos:", error);
         setError("Unable to load videos. Please try again later.");
@@ -32,7 +72,19 @@ export default function Newsfeed() {
       }
     };
     fetchVideos();
-  }, []);
+  }, [page]);
+
+  const handleNextPage = () => {
+    if (page < totalPages) {
+      setPage(page + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (page > 1) {
+      setPage(page - 1);
+    }
+  };
 
   if (loading) {
     return (
@@ -50,6 +102,7 @@ export default function Newsfeed() {
     );
   }
 
+  // Handle empty state
   if (videos.length === 0) {
     return (
       <div className="py-12 text-center empty-state">
@@ -87,7 +140,7 @@ export default function Newsfeed() {
                 height="315"
                 src={`https://www.youtube.com/embed/${getYoutubeVideoId(
                   video.url
-                )}`}
+                )}?rel=0&origin=${window.location.origin}`}
                 title={`YouTube Video ${index + 1}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
@@ -104,6 +157,25 @@ export default function Newsfeed() {
             </div>
           </div>
         ))}
+        <div className="flex justify-between mt-6">
+          <button
+            onClick={handlePreviousPage}
+            disabled={page === 1}
+            className="rounded-lg py-2 px-4 bg-gray-700 text-white disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <span className="text-gray-700">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            onClick={handleNextPage}
+            disabled={page === totalPages}
+            className="rounded-lg py-2 px-4 bg-gray-700 text-white disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
       </div>
     </div>
   );

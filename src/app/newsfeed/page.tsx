@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import cable from "@/utils/cable";
 import { toast } from "react-toastify";
 import { getCookie } from "@/utils/cookies";

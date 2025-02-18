@@ -35,7 +35,7 @@ export default function SharePage() {
         setTimeout(() => router.push("/"), 2000);
       } else {
         const responseBody = await response.json();
-        setError(responseBody.error);
+        setError(responseBody.error.message);
         setMessage("");
       }
     } catch (err) {

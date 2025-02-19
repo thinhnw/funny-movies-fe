@@ -47,7 +47,7 @@ export default function Newsfeed() {
     return () => {
       subscription.unsubscribe();
     };
-  });
+  }, []);
 
   useEffect(() => {
     const fetchVideos = async () => {

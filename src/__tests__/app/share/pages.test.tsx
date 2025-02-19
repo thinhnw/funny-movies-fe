@@ -33,16 +33,10 @@ describe("SharePage Component", () => {
   });
 
   test("displays success message on successful video share", async () => {
-    global.fetch = vi.fn();
-
-    const mockedFetch = vi.mocked(global.fetch);
-
-    mockedFetch.mockImplementation(() =>
-      Promise.resolve({
-        ok: true,
-        json: () => Promise.resolve({ message: "Success" }),
-      } as Response)
-    );
+    global.fetch = vi.fn(() => Promise.resolve({
+      ok: true,
+      json: () => Promise.resolve({ message: "Success" }),
+    } as Response));
 
     render(<SharePage />);
 
@@ -64,16 +58,9 @@ describe("SharePage Component", () => {
   });
 
   test("displays error message on API failure", async () => {
-    global.fetch = vi.fn();
-
-    const mockedFetch = vi.mocked(global.fetch);
-
-    mockedFetch.mockImplementation(() =>
-      Promise.resolve({
-        json: () =>
-          Promise.resolve({ error: { message: "Invalid YouTube URL" } }),
-      } as Response)
-    );
+    global.fetch = vi.fn(() => Promise.resolve({
+      json: () => Promise.resolve({ error: { message: "Invalid YouTube URL" } }),
+    } as Response))
 
     render(<SharePage />);
 

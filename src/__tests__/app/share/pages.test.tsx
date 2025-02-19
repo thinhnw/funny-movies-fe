@@ -84,7 +84,6 @@ describe("SharePage Component", () => {
     fireEvent.click(button);
 
     await waitFor(() => {
-      screen.debug();
       expect(screen.getByText("Invalid YouTube URL")).toBeInTheDocument();
     });
   });

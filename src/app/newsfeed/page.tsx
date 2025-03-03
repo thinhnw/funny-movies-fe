@@ -24,6 +24,7 @@ export default function Newsfeed() {
       {
         channel: "NotificationChannel",
         token: getCookie("token"),
+        key: crypto.randomUUID()
       },
       {
         received: (video: Video) => {
